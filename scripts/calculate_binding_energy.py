@@ -3,6 +3,7 @@
 from __future__ import print_function
 import argparse
 import os
+import time
 from pyrosetta import *
 from pyrosetta.rosetta.protocols.analysis import InterfaceAnalyzerMover
 from pyrosetta.rosetta.protocols.relax import FastRelax
@@ -113,11 +114,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    start_time = time.time()
+
     if not os.path.isfile(args.pdb_file):
         print(f"Error: PDB file not found at '{args.pdb_file}'")
     else:
-        # Initialize PyRosetta
-        init(extra_options="-ignore_unrecognized_res -ex1 -ex2")
+        # Initialize PyRosetta with options to silence verbose output
+        init(extra_options="-ignore_unrecognized_res -ex1 -ex2 -out:level 100")
         
         # Create a standard score function (ref2015 is default)
         scorefxn = get_score_function(True)
@@ -133,4 +136,10 @@ if __name__ == "__main__":
         
         if args.breakdown:
             get_energy_breakdown(analysis_pose, args.chain_b, scorefxn)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print("\n" + "="*60)
+    print(f"Total execution time: {elapsed_time:.2f} seconds")
+    print("="*60)
 
