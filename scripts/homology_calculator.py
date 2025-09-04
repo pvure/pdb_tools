@@ -41,10 +41,6 @@ class PDBSequenceAnalyzer:
         self.pairwise_identities = None
 
     def extract_chain_b_sequences(self):
-        """
-        Extracts protein sequences from chain B of all PDB files using a method
-        that is compatible with older versions of Biopython.
-        """
         print("--- Step 1: Extracting Chain B sequences ---")
         parser = PDB.PDBParser(QUIET=True)
         
@@ -118,8 +114,8 @@ class PDBSequenceAnalyzer:
             identity_matrix = pd.DataFrame(np.identity(len(names)) * 100, index=names, columns=names)
             
             for _, row in results_df.iterrows():
-                identity_matrix.loc[row['query'], row['target']] = row['pident'] * 100
-                identity_matrix.loc[row['target'], row['query']] = row['pident'] * 100
+                identity_matrix.loc[row['query'], row['target']] = row['pident'] 
+                identity_matrix.loc[row['target'], row['query']] = row['pident'] 
             
             self.pairwise_identities = identity_matrix
             print("  Pairwise identity matrix calculated successfully.")
@@ -179,7 +175,7 @@ def main():
     analyzer.generate_plots()
     analyzer.save_results()
     
-    print("\n✅ Analysis complete!")
+    print("\n Analysis complete!")
 
 if __name__ == "__main__":
     main()
